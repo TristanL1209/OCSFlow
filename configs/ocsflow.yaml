@@ -1,0 +1,90 @@
+common:
+  data_root: ./datasets
+  device: auto
+  split:
+    train_per_class: 30
+    val_per_class: 10
+  normalization:
+    method: train_pixels_zscore
+    eps: 1.0e-8
+  auto_grid:
+    min_rows: 3
+    min_cols: 3
+  model:
+    feature_dim: 96
+    group_norm_groups: 8
+    temperature: 0.5
+    spatial_weight: 1.0
+    spectral_weight: 1.0
+    feature_weight: 1.0
+    center_pool_size: 1
+    chunk_size: 8192
+    k_neighbors: 8
+    knn_chunk_size: 512
+    graph_layers: 2
+    graph_alpha: 1.0
+    graph_beta: 0.5
+    graph_gamma: 0.5
+    fm_hidden_dim: 96
+    sigma: 0.2
+    euler_steps: 10
+    residual_scale_init: 1.0
+    transformer_attention: auto
+  boundary_candidate_reweight:
+    hidden_dim: 64
+    correction_scale: 1.0
+    detach_gate: false
+    detach_reweight_inputs: false
+  sparse_remote_token_coupling:
+    candidate_pool_multiplier: 4.0
+    remote_neighbors_per_anchor: 2
+    max_remote_reuse: 4
+    similarity_temperature: 0.10
+    min_spatial_distance_factor: 2.0
+    detach_selection_features: true
+    similarity_chunk_size: 1024
+  training:
+    epochs: 300
+    learning_rate: 0.001
+    min_learning_rate: 0.00001
+    weight_decay: 0.0001
+    fm_loss_weight: 0.5
+    classification_loss_weight: 1.0
+    evaluation_noise_seed_offset: 10000
+    log_interval: 10
+datasets:
+  IP:
+    auto_grid:
+      row_stride: 3.0
+      col_stride: 3.0
+    model:
+      feature_dim: 64
+      fm_hidden_dim: 64
+      chunk_size: 4096
+      euler_steps: 5
+      residual_scale_init: 0.512
+    training:
+      fm_loss_weight: 0.8
+      log_interval: 20
+  PU:
+    model:
+      grid_rows: 84
+      grid_cols: 41
+      euler_steps: 5
+  KSC:
+    auto_grid:
+      row_stride: 7.0
+      col_stride: 7.5
+    model:
+      feature_dim: 80
+      fm_hidden_dim: 80
+      chunk_size: 6144
+    training:
+      epochs: 260
+      fm_loss_weight: 0.1
+      log_interval: 15
+  HC:
+    model:
+      grid_rows: 168
+      grid_cols: 42
+      chunk_size: 6144
